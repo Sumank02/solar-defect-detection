@@ -1,0 +1,15 @@
+train: D:/solar-defect-detection/dataset/train/images
+val: D:/solar-defect-detection/dataset/valid/images
+test: D:/solar-defect-detection/dataset/test/images
+
+nc: 8
+names: [
+  'MultiByPassed',
+  'MultiDiode',
+  'MultiHotSpot',
+  'SingleByPassed',
+  'SingleDiode',
+  'SingleHotSpot',
+  'StringOpenCircuit',
+  'StringReversedPolarity'
+]
