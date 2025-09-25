@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solar Hotspot Detection</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>Analyze Thermal Image</h1>
+            <form action="/analyze" method="post" enctype="multipart/form-data" class="upload-form">
+                <input type="file" name="file" accept="image/*" required />
+                <button type="submit">Analyze</button>
+            </form>
+            <p class="hint">Upload a thermal image to detect hotspots and defects.</p>
+        </div>
+        <div class="right">
+            {% if result_image_url %}
+            <div class="result">
+                <img src="{{ result_image_url }}" alt="Detection result" />
+            </div>
+            {% else %}
+            <div class="placeholder">Result will appear here after analysis.</div>
+            {% endif %}
+
+            <div class="details">
+                <h2>Detections</h2>
+                {% if detections and detections|length > 0 %}
+                <ul>
+                    {% for det in detections %}
+                    <li>
+                        <strong>{{ det.class_name }}</strong>
+                        ({{ '%.2f'|format(det.confidence) }})
+                        — box: [{{ '%.0f'|format(det.box[0]) }}, {{ '%.0f'|format(det.box[1]) }}, {{ '%.0f'|format(det.box[2]) }}, {{ '%.0f'|format(det.box[3]) }}]
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No defects detected.</p>
+                {% endif %}
+
+                <h2>Summary</h2>
+                {% if summary %}
+                <p>Total detections: <strong>{{ summary.total }}</strong></p>
+                <ul>
+                    {% for k, v in summary.counts.items() %}
+                    <li>{{ k }}: <strong>{{ v }}</strong></li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>Upload an image to see a summary.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
