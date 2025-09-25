@@ -1,6 +1,7 @@
 import os
 from ultralytics import YOLO
 import torch
+import glob
 
 # Fix for PyTorch 2.8.0+ weights_only issue
 original_load = torch.load
@@ -8,8 +9,23 @@ def safe_load(file, **kwargs):
     return original_load(file, weights_only=False, **kwargs)
 torch.load = safe_load
 
-# Path to trained YOLO model (updated to most recent training run)
-MODEL_PATH = "runs/detect/solar_defect_train9/weights/best.pt"
+# Resolve trained model path automatically (latest best.pt with fallbacks)
+def resolve_model_path() -> str:
+    candidates = glob.glob(os.path.join("runs", "detect", "*", "weights", "best.pt"))
+    if candidates:
+        return max(candidates, key=os.path.getmtime)
+    fallbacks = [
+        os.path.join("runs", "detect", "solar_defect_train9", "weights", "best.pt"),
+        os.path.join("runs", "detect", "solar_defect_train", "weights", "best.pt"),
+    ]
+    for p in fallbacks:
+        if os.path.exists(p):
+            return p
+    # Final fallback: local yolov8n.pt or base config
+    local_pt = os.path.join(os.getcwd(), "yolov8n.pt")
+    return local_pt if os.path.exists(local_pt) else "yolov8n.yaml"
+
+MODEL_PATH = resolve_model_path()
 
 # Input folder for testing images
 SAMPLE_FOLDER = "sample"
@@ -25,11 +41,7 @@ try:
     print(f"Model loaded successfully from: {MODEL_PATH}")
 except Exception as e:
     print(f"Error loading model: {e}")
-    print("Trying alternative model path...")
-    # Try alternative path if the first one doesn't work
-    MODEL_PATH = "runs/detect/solar_defect_train/weights/best.pt"
-    model = YOLO(MODEL_PATH)
-    print(f"Model loaded from alternative path: {MODEL_PATH}")
+    raise
 
 # Loop through sample images
 for img_file in os.listdir(SAMPLE_FOLDER):

@@ -144,7 +144,7 @@ async def analyze(request: Request, file: UploadFile = File(...)):
                 "result_image_url": result_image_url,
                 "detections": detections,
                 "summary": summary,
-                "logs": logs,
+                "logs": logs + [f"Model: {model_service.get_model_source()}"] ,
             },
         )
     except Exception as exc:
@@ -154,7 +154,7 @@ async def analyze(request: Request, file: UploadFile = File(...)):
         # Return 200 so the page updates with logs instead of browser showing 500 error banner
         return templates.TemplateResponse(
             "index.html",
-            {"request": request, "result_image_url": None, "detections": [], "summary": None, "logs": logs},
+            {"request": request, "result_image_url": None, "detections": [], "summary": None, "logs": logs + [f"Model: {model_service.get_model_source()}"]},
         )
 
 
