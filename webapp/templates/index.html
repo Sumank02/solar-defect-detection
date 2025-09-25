@@ -52,6 +52,16 @@
                 {% else %}
                 <p>Upload an image to see a summary.</p>
                 {% endif %}
+
+                <h2>Processing Log</h2>
+                {% if logs and logs|length > 0 %}
+                <pre class="log">
+{% for line in logs %}{{ line }}
+{% endfor %}
+                </pre>
+                {% else %}
+                <p>No logs yet.</p>
+                {% endif %}
             </div>
         </div>
     </div>

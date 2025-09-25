@@ -1,11 +1,14 @@
 import glob
 import os
+import logging
 from typing import Any, Dict, List, Tuple
 
 import cv2
 import numpy as np
 import torch
 from ultralytics import YOLO
+
+logger = logging.getLogger("webapp.model")
 
 
 class ModelService:
@@ -25,14 +28,23 @@ class ModelService:
 
     def _load_model(self, explicit_path: str | None) -> YOLO:
         if explicit_path and os.path.exists(explicit_path):
+            logger.info(f"Loading model from explicit path: {explicit_path}")
             return YOLO(explicit_path)
 
         model_files = glob.glob("runs/detect/*/weights/best.pt")
         if model_files:
             latest_model = max(model_files, key=os.path.getctime)
+            logger.info(f"Loading latest trained model: {latest_model}")
             return YOLO(latest_model)
 
-        # Fallback to a small base config if no trained weights exist
+        # Prefer local lightweight weights if present to avoid downloads
+        local_pt = os.path.join(os.getcwd(), "yolov8n.pt")
+        if os.path.exists(local_pt):
+            logger.warning(f"No trained weights found. Falling back to local weights: {local_pt}")
+            return YOLO(local_pt)
+
+        # Final fallback: base YAML config (may require network for weights)
+        logger.warning("No trained weights found. Falling back to base config 'yolov8n.yaml'")
         return YOLO("yolov8n.yaml")
 
     def run_inference(self, image_bgr: np.ndarray) -> Tuple[np.ndarray, List[Dict[str, Any]]]:
@@ -40,8 +52,10 @@ class ModelService:
 
         Each detection: {class_id, class_name, confidence, box: [x1,y1,x2,y2]}.
         """
+        logger.info("Running YOLO inference")
         results = self.model(image_bgr, conf=self.confidence_threshold)
         if len(results) == 0:
+            logger.info("No results returned from model")
             return image_bgr, []
 
         result = results[0]
@@ -62,6 +76,8 @@ class ModelService:
                         "box": [float(x) for x in xyxy],
                     }
                 )
+
+        logger.info(f"Detections parsed: {len(detections)}")
 
         return annotated_bgr, detections
 
