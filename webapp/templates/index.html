@@ -3,68 +3,164 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Solar Hotspot Detection</title>
+    <title>Solar Defect Detection Dashboard</title>
     <link rel="stylesheet" href="/static/styles.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="left">
-            <h1>Analyze Thermal Image</h1>
-            <form action="/analyze" method="post" enctype="multipart/form-data" class="upload-form">
-                <input type="file" name="file" accept="image/*" required />
-                <button type="submit">Analyze</button>
-            </form>
-            <p class="hint">Upload a thermal image to detect hotspots and defects.</p>
-        </div>
-        <div class="right">
-            {% if result_image_url %}
-            <div class="result">
-                <img src="{{ result_image_url }}" alt="Detection result" />
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-solar-panel"></i>
+                <h1>Solar Defect Detection</h1>
             </div>
-            {% else %}
-            <div class="placeholder">Result will appear here after analysis.</div>
-            {% endif %}
+            <div class="header-subtitle">AI-Powered Thermal Analysis System</div>
+        </div>
+    </header>
 
-            <div class="details">
-                <h2>Detections</h2>
-                {% if detections and detections|length > 0 %}
-                <ul>
-                    {% for det in detections %}
-                    <li>
-                        <strong>{{ det.class_name }}</strong>
-                        ({{ '%.2f'|format(det.confidence) }})
-                        — box: [{{ '%.0f'|format(det.box[0]) }}, {{ '%.0f'|format(det.box[1]) }}, {{ '%.0f'|format(det.box[2]) }}, {{ '%.0f'|format(det.box[3]) }}]
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p>No defects detected.</p>
-                {% endif %}
+    <main class="main-content">
+        <div class="container">
+            <div class="left-panel">
+                <div class="panel-header">
+                    <i class="fas fa-upload"></i>
+                    <h2>Image Upload & Analysis</h2>
+                </div>
+                <form action="/analyze" method="post" enctype="multipart/form-data" class="upload-form">
+                    <div class="file-upload-area">
+                        <input type="file" name="file" accept="image/*" required id="file-input" />
+                        <label for="file-input" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span class="upload-text">Choose Thermal Image</span>
+                            <span class="upload-hint">JPG, PNG supported</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="analyze-btn">
+                        <i class="fas fa-search"></i>
+                        Analyze Image
+                    </button>
+                </form>
+                <div class="info-card">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Upload thermal images to detect hotspots, bypassed diodes, and other solar panel defects using advanced YOLO detection.</p>
+                </div>
+            </div>
 
-                <h2>Summary</h2>
-                {% if summary %}
-                <p>Total detections: <strong>{{ summary.total }}</strong></p>
-                <ul>
-                    {% for k, v in summary.counts.items() %}
-                    <li>{{ k }}: <strong>{{ v }}</strong></li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p>Upload an image to see a summary.</p>
-                {% endif %}
+            <div class="right-panel">
+                <div class="results-section">
+                    <div class="panel-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h2>Detection Results</h2>
+                    </div>
+                    
+                    {% if result_image_url %}
+                    <div class="result-image-container">
+                        <img src="{{ result_image_url }}" alt="Detection result" class="result-image" />
+                        <div class="image-overlay">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Analysis Complete</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="placeholder">
+                        <i class="fas fa-image"></i>
+                        <h3>No Analysis Yet</h3>
+                        <p>Upload an image to see detection results here</p>
+                    </div>
+                    {% endif %}
+                </div>
 
-                <h2>Processing Log</h2>
-                {% if logs and logs|length > 0 %}
-                <pre class="log">
-{% for line in logs %}{{ line }}
-{% endfor %}
-                </pre>
-                {% else %}
-                <p>No logs yet.</p>
-                {% endif %}
+                <div class="details-section">
+                    <div class="detection-stats">
+                        <h3><i class="fas fa-bullseye"></i> Detection Statistics</h3>
+                        {% if detections and detections|length > 0 %}
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number">{{ detections|length }}</span>
+                                <span class="stat-label">Total Defects</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ (detections|map(attribute='confidence')|list|max * 100)|round(1) if detections else 0 }}%</span>
+                                <span class="stat-label">Max Confidence</span>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="no-detections">
+                            <i class="fas fa-shield-alt"></i>
+                            <p>No defects detected</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="detection-list">
+                        <h3><i class="fas fa-list"></i> Detected Defects</h3>
+                        {% if detections and detections|length > 0 %}
+                        <div class="detection-items">
+                            {% for det in detections %}
+                            <div class="detection-item">
+                                <div class="defect-type">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span class="defect-name">{{ det.class_name }}</span>
+                                </div>
+                                <div class="defect-confidence">
+                                    <span class="confidence-badge">{{ '%.1f'|format(det.confidence * 100) }}%</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="no-detections">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Panel appears healthy</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="summary-section">
+                        <h3><i class="fas fa-chart-pie"></i> Summary</h3>
+                        {% if summary %}
+                        <div class="summary-content">
+                            <div class="summary-total">
+                                <span class="total-number">{{ summary.total }}</span>
+                                <span class="total-label">Total Detections</span>
+                            </div>
+                            {% if summary.counts %}
+                            <div class="defect-breakdown">
+                                {% for k, v in summary.counts.items() %}
+                                <div class="breakdown-item">
+                                    <span class="defect-type">{{ k }}</span>
+                                    <span class="defect-count">{{ v }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <p class="no-summary">Upload an image to see analysis summary</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="processing-log">
+                        <h3><i class="fas fa-terminal"></i> Processing Log</h3>
+                        {% if logs and logs|length > 0 %}
+                        <div class="log-container">
+                            {% for line in logs %}
+                            <div class="log-line">{{ line }}</div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="no-logs">No processing logs yet</p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p> 2025 Solar Defect Detection System. Powered by YOLO & AI.</p>
+        </div>
+    </footer>
 </body>
 </html>
 
