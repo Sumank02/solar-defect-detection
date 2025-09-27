@@ -34,6 +34,20 @@
                             <span class="upload-hint">JPG, PNG supported</span>
                         </label>
                     </div>
+                    
+                    <div class="file-preview" id="file-preview" style="display: none;">
+                        <div class="preview-content">
+                            <img id="preview-image" src="" alt="Preview" class="preview-thumbnail">
+                            <div class="preview-info">
+                                <div class="file-name" id="file-name"></div>
+                                <div class="file-size" id="file-size"></div>
+                            </div>
+                            <button type="button" class="remove-file" id="remove-file">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
                     <button type="submit" class="analyze-btn">
                         <i class="fas fa-search"></i>
                         Analyze Image
@@ -161,6 +175,43 @@
             <p> 2025 Solar Defect Detection System. Powered by YOLO & AI.</p>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('file-preview');
+            const previewImage = document.getElementById('preview-image');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            
+            if (file) {
+                // Show preview
+                preview.style.display = 'block';
+                
+                // Set file name
+                fileName.textContent = file.name;
+                
+                // Set file size
+                const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                fileSize.textContent = sizeInMB + ' MB';
+                
+                // Create image preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+        
+        // Remove file functionality
+        document.getElementById('remove-file').addEventListener('click', function() {
+            document.getElementById('file-input').value = '';
+            document.getElementById('file-preview').style.display = 'none';
+        });
+    </script>
 </body>
 </html>
 
