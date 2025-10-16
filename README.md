@@ -63,7 +63,8 @@ git lfs pull
 
 - Train (default 50 epochs; set `YOLO_EPOCHS` to shorten while testing):
 ```powershell
-$env:YOLO_EPOCHS="10"; python train_yolo.py
+$env:YOLO_EPOCHS="50"; 
+python train_yolo.py
 ```
 Trained checkpoint is saved at `runs/detect/solar_defect_train/weights/best.pt`.
 
