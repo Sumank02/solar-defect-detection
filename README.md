@@ -9,6 +9,38 @@ Key tech: Ultralytics YOLOv8, PyTorch, OpenCV, FastAPI/Jinja2. Dataset follows s
 
 ## Setup
 
+**⚠️ IMPORTANT: This repository uses Git LFS for large files (dataset images).**
+
+**Option 1: Using Git (Recommended)**
+1. Install Git from https://git-scm.com/downloads (if not already installed)
+2. Clone this repository:
+   ```powershell
+   git clone <repository-url>
+   cd solar-defect-detection
+   ```
+3. Install Git LFS and pull the large files:
+   ```powershell
+   git lfs install
+   git lfs pull
+   ```
+
+**Option 2: ZIP + Manual Dataset Folder**
+If you receive this project as a ZIP file, the dataset images will be missing (Git LFS stores them separately). To fix this:
+1. Unzip the project
+2. Get the `dataset/` folder separately (ask the sender to share it directly via file sharing service, USB, etc.)
+3. Place the complete `dataset/` folder in the project root, maintaining the structure:
+   ```
+   dataset/
+     train/images/  (with all .jpg files)
+     train/labels/  (with all .txt files)
+     valid/images/
+     valid/labels/
+     test/images/
+     test/labels/
+   ```
+
+**After completing Option 1 or Option 2 above, continue with the setup steps below:**
+
 1) Install Python 3.10+ and open PowerShell in the project folder, e.g. `D:\solar-defect-detection`.
 
 2) Create and activate a virtual environment:
@@ -53,11 +85,6 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-If your repo uses Git LFS for images/weights, fetch data:
-```powershell
-git lfs install
-git lfs pull
-```
 
 ### 1) Root scripts (training and quick prediction)
 
