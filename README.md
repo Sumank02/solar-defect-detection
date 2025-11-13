@@ -24,8 +24,8 @@ Key tech: Ultralytics YOLOv8, PyTorch, OpenCV, FastAPI/Jinja2. Dataset follows s
    git lfs pull
    ```
 
-**Option 2: ZIP + Manual Dataset Folder**
-If you receive this project as a ZIP file, the dataset images will be missing (Git LFS stores them separately). To fix this:
+**Option 2: ZIP + Manual Dataset Folder (No Git Required!)**
+If you receive this project as a ZIP file, the dataset images will be missing (Git LFS stores them separately). **You do NOT need Git for this option.**
 1. Unzip the project
 2. Get the `dataset/` folder separately (ask the sender to share it directly via file sharing service, USB, etc.)
 3. Place the complete `dataset/` folder in the project root, maintaining the structure:
@@ -38,6 +38,7 @@ If you receive this project as a ZIP file, the dataset images will be missing (G
      test/images/
      test/labels/
    ```
+4. **Skip all Git commands** - you can proceed directly to Python setup below.
 
 **After completing Option 1 or Option 2 above, continue with the setup steps below:**
 
@@ -141,6 +142,27 @@ python hardware/real_time_detection.py
 - Training: `runs/detect/<run_name>/` (weights under `weights/best.pt`, charts as `results.png`)
 - Prediction (CLI): `runs/detect/predict*/` or `outputs/` depending on the script
 - Web app: `webapp/static/results/`
+
+### Troubleshooting
+
+**Error: "git is not recognized" or "The term 'git' is not recognized"**
+- If you received the project as a ZIP file, you **don't need Git!** Use **Option 2** above and skip all Git commands. Just unzip, add the `dataset/` folder manually, and proceed with Python setup.
+- If you want to use Git (Option 1), install it from https://git-scm.com/downloads first, then restart PowerShell.
+
+**Error: "Git LFS pointer detected" or missing dataset images**
+- If using Option 1: Make sure you ran `git lfs install` and `git lfs pull` after cloning.
+- If using Option 2: Make sure you manually added the complete `dataset/` folder with all actual image files (not pointer files).
+
+**Dataset not found errors**
+- Verify the `dataset/` folder exists in the project root with the correct structure (train/images, train/labels, etc.).
+- Check that `dataset/data.yaml` has the correct absolute paths for your machine.
+
+**Warning: "LF will be replaced by CRLF" for `.venv/` files**
+- This happens because the virtual environment (`.venv/`) is being tracked by Git, which it shouldn't be.
+- **Solution**: The project now includes a `.gitignore` file. If you see these warnings:
+  1. Remove `.venv/` from Git tracking: `git rm -r --cached .venv`
+  2. Commit the change: `git commit -m "Remove .venv from tracking"`
+  3. The warnings will stop appearing. Virtual environments should never be committed to Git.
 
 ### Conclusion
 After training produces `best.pt`, all modes (software-only, web, hardware) auto-use it and generate detections on your thermal images. Before `best.pt` exists, scripts run with a fallback model (`yolov8n.pt`/`yolov8n.yaml`) to avoid errors, but detections will be limited. For stronger results, improve labels, increase epochs, and validate paths in `dataset/data.yaml`.
