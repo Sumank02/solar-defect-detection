@@ -13,6 +13,7 @@ body {
     line-height: 1.6;
 }
 
+
 /* Header */
 .header {
     background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
@@ -53,6 +54,7 @@ body {
     font-weight: 300;
 }
 
+
 /* Main content */
 .main-content {
     padding: 2rem 0;
@@ -67,6 +69,7 @@ body {
     grid-template-columns: 1fr 1.4fr;
     gap: 2rem;
 }
+
 
 /* Panels */
 .left-panel, .right-panel {
@@ -98,10 +101,12 @@ body {
     color: #2d3748;
 }
 
+
 /* Upload form */
 .upload-form {
     margin-bottom: 1.5rem;
 }
+
 
 /* File preview */
 .file-preview {
@@ -244,6 +249,7 @@ body {
     transform: translateY(0);
 }
 
+
 /* Info card */
 .info-card {
     background: linear-gradient(135deg, #e6fffa 0%, #f0fff4 100%);
@@ -266,6 +272,7 @@ body {
     font-size: 0.95rem;
     line-height: 1.5;
 }
+
 
 /* Results section */
 .results-section {
@@ -324,6 +331,7 @@ body {
     color: #718096;
 }
 
+
 /* Details section */
 .details-section {
     display: flex;
@@ -344,6 +352,7 @@ body {
 .details-section h3 i {
     color: #667eea;
 }
+
 
 /* Detection stats */
 .stats-grid {
@@ -372,6 +381,7 @@ body {
     font-size: 0.9rem;
     opacity: 0.9;
 }
+
 
 /* Detection list */
 .detection-items {
@@ -413,6 +423,7 @@ body {
     font-size: 0.85rem;
     font-weight: 600;
 }
+
 
 /* Summary section */
 .summary-content {
@@ -463,6 +474,7 @@ body {
     font-weight: 600;
 }
 
+
 /* Processing log */
 .log-container {
     background: #1a202c;
@@ -485,6 +497,7 @@ body {
     border-bottom: none;
 }
 
+
 /* No data states */
 .no-detections, .no-summary, .no-logs {
     text-align: center;
@@ -501,6 +514,7 @@ body {
     display: block;
 }
 
+
 /* Footer */
 .footer {
     background: #1a202c;
@@ -515,6 +529,7 @@ body {
     margin: 0 auto;
     padding: 0 2rem;
 }
+
 
 /* Responsive design */
 @media (max-width: 1024px) {
@@ -558,5 +573,3 @@ body {
         grid-template-columns: 1fr;
     }
 }
-
-
