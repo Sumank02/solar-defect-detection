@@ -17,6 +17,7 @@ IMAGES_ROOT = os.path.join(DOCS_DIR, "images")
 # Defect metadata (edit as needed)
 DEFECTS: Dict[str, Dict[str, str]] = {
 	
+	
 }
 
 COLS = ["defect_type", "summary", "typical_causes", "thermal_signature", "example_image"]
