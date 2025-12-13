@@ -16,7 +16,46 @@ IMAGES_ROOT = os.path.join(DOCS_DIR, "images")
 
 # Defect metadata (edit as needed)
 DEFECTS: Dict[str, Dict[str, str]] = {
-	
+	"MultiByPassed": {
+		"summary": "Multiple panel cells or entire strings bypassed, reducing power output and causing uneven temperatures due to engaged bypass diodes.",
+		"typical_causes": "Bypass diode engagement due to shading or faults",
+		"thermal_signature": "Localized cooler zones across multiple cells",
+	},
+	"MultiDiode": {
+		"summary": "Several bypass diodes malfunction simultaneously across strings, creating repeated performance losses and distinctive alternating thermal patterns.",
+		"typical_causes": "Diode failure or incorrect wiring",
+		"thermal_signature": "Alternating hot/cool stripes along strings",
+	},
+	"MultiHotSpot": {
+		"summary": "Numerous localized overheating points across the module, commonly from soiling, microcracks, or partial shading, risking accelerated degradation.",
+		"typical_causes": "Soiling, microcracks, or partial shading",
+		"thermal_signature": "Discrete high-temperature points on many cells",
+	},
+	"SingleByPassed": {
+		"summary": "One cell or string is bypassed, lowering output and producing a noticeably cooler region relative to surrounding healthy cells.",
+		"typical_causes": "Local shading or single-cell failure",
+		"thermal_signature": "One cooler region within an otherwise normal module",
+	},
+	"SingleDiode": {
+		"summary": "A single failed bypass diode disrupts current flow, generating sharp string-level anomalies and potential heating under certain operating conditions.",
+		"typical_causes": "Open/short in a single bypass diode",
+		"thermal_signature": "One string-level anomaly with sharp gradient",
+	},
+	"SingleHotSpot": {
+		"summary": "One concentrated thermal anomaly from cracks, solder faults, or contact resistance, often the earliest visible sign of emerging failure.",
+		"typical_causes": "Crack, solder issue, or contact resistance",
+		"thermal_signature": "One distinct high-temperature point",
+	},
+	"StringOpenCircuit": {
+		"summary": "An open circuit within a string prevents current flow, leaving the entire string cooler and reducing overall module or array output.",
+		"typical_causes": "Connector/open-circuit fault",
+		"thermal_signature": "Whole string cooler than adjacent strings",
+	},
+	"StringReversedPolarity": {
+		"summary": "A string wired in reverse polarity creates abnormal current paths, distinctive thermal signatures, and significant efficiency losses until corrected.",
+		"typical_causes": "Installation/wiring error",
+		"thermal_signature": "Whole string anomalous; pattern differs from neighbors",
+	},
 	
 }
 
