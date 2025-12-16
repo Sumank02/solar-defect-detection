@@ -23,14 +23,7 @@ RUNS_NAME = "catalog_examples"
 
 # Classes (must match dataset/data.yaml)
 CLASS_NAMES: List[str] = [
-	"MultiByPassed",
-	"MultiDiode",
-	"MultiHotSpot",
-	"SingleByPassed",
-	"SingleDiode",
-	"SingleHotSpot",
-	"StringOpenCircuit",
-	"StringReversedPolarity",
+
 ]
 
 DATASETS = [
