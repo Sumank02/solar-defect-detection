@@ -4,12 +4,12 @@ test: D:/solar-defect-detection/dataset/test/images
 
 nc: 8
 names: [
-  'MultiByPassed',
-  'MultiDiode',
-  'MultiHotSpot',
-  'SingleByPassed',
-  'SingleDiode',
-  'SingleHotSpot',
-  'StringOpenCircuit',
-  'StringReversedPolarity'
+  "SingleDiode",
+	"MultiDiode",
+	"SingleByPassed",
+	"MultiByPassed",
+	"SingleHotSpot",
+	"MultiHotSpot",
+	"StringOpenCircuit",
+	"StringReversedPolarity",
 ]
